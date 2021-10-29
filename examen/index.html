@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXAMEN</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <STyle>
+        .color {
+            color: rgb(1, 58, 245);
+            text-align: center;
+        }
+
+        .color2 {
+            color: rgb(53, 9, 175);
+        }
+
+        .bordes {
+            border: 2px solid black;
+        }
+    </STyle>
+</head>
+
+<body>
+    <div class="container-fluid" style="background-color: rgba(112, 17, 17, 0.596);">
+        <main>
+            <div class="py-5 text-center" >
+                <h2 >RESTAURANTE "LA VILLA"</h2>
+            </div>
+            <div class="row g-5" >
+                <div class="col-md-4 col-lg-4 order-md-last" style="background-color: rgb(250, 216, 66);">
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="color2">RESERVACIONES</span>
+                        <span class="badge bg-primary rounded-pill" id="REGISTRAR"></span>
+                    </h4>
+                    <ul class="list-group mb-3">
+                        <div id="pizarra">
+
+                        </div>
+                    </ul>
+                </div>
+                <div class="col-md-8 col-lg-8" style="background-color: white;">
+                    <h4 class="mb-4 color">INGRESAR DATOS DE RESERVACION</h4>
+                    <div class="row g-3">
+                        <div class="col-sm-5">
+                            <label for="firstName" class="form-label">Nombre</label>
+                            <input type="text" class="form-control bordes" id="nombre">
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="lastName" class="form-label">Fecha</label>
+                            <input type="text" class="form-control bordes" id="fecha">
+                        </div>
+                        <div class="col-sm-2">
+                            <label for="lastName" class="form-label">Numero de mesa</label>
+                            <select class="form-control bordes" id="mesa">
+                                <option value="1">Mesa 1</option>
+                                <option value="2">Mesa 2</option>
+                                <option value="3">Mesa 3</option>
+                                <option value="4">Mesa 4</option>
+                                <option value="5">Mesa 5</option>
+                                <option value="6">Mesa 6</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <button style="background-color: coral;" class="w-100 btn btn-primary btn-lg" id="btn-agregar">REGISTRAR</button>
+                    <br>
+                    <hr class="my-4">
+                    <div class="col-sm-3 offset-6">
+                        <label for="lastName" class="form-label">OPCIONES</label>
+                        <select class="form-control" id="opcion">
+                            <option value="1">MOSTRAR MESAS OCUPADAS</option>
+                            <option value="2">MOSTRAR MESAS DISPONIBLES</option>
+                            <option value="3">MOSTRAR RESERVACIONES CONFIRMADAS</option>
+                        </select>
+                        <button style="background-color: coral;" class="w-100 btn btn-primary btn-lg" id="btn-opcion">SELECCIONAR</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+<script src="jcuery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var contador = 0;
+        var reservacion = [];
+        var mesasOcupadas = [];
+
+        $("#btn-agregar").click(function () {
+            let datos = {
+                "nombre": $("#nombre").val(),
+                "fecha": $("#fecha").val(),
+                "mesa": $("#mesa").val()
+            };
+            contador++;
+            let existe = false;
+            for (let i = 0; i < mesasOcupadas.length; i++) {
+                if (mesasOcupadas[i] == $("#mesa").val()) {
+                    existe = true;
+                }
+            }
+            if (existe == false) {
+                mesasOcupadas.push($("#mesa").val());
+            }
+
+            reservacion.push(datos);
+            $("#pizarra").append('<li class="list-group-item d-flex justify-content-between bg-light"><div class="text-success"><h6 class="my-0">' + "NOMBRE: " + datos.nombre + '</h6><small>' + "FECHA RESERVACION: " + datos.fecha + '</small></div><span class="text-success">' + "MESA: " + datos.mesa + '</span></li>');
+        });
+
+        $("#btn-opcion").click(function () {
+            let opc = $("#opcion").val();
+
+            switch (opc) {
+                case "1":
+                    ocupadasMesas(reservacion);
+                    break;
+                case "2":
+                    mesas_disp();
+                    break;
+                case "3":
+                    let mesa = prompt("INGRESA EL NUMERO DE MESA");
+                    for (let i = 0; i < reservacion.length; i++) {
+                        if (reservacion[i].mesa == mesa) {
+                            alert("Nombre: " + reservacion[i].nombre + "\nFECHA: " + reservacion[i].fecha + "\nMESA: " + reservacion[i].mesa);
+                        }
+                    }
+                    break;
+
+            }
+        });
+        function mesas_disp() {
+            let cant = 6 - contador;
+
+            alert("mesas Disponibles: " + cant)
+        }
+        function ocupadasMesas(elementos) {
+            let mesaOcupada = "";
+            for (let i = 0; i < mesasOcupadas.length; i++) {
+                mesaOcupada += mesasOcupadas[i] + "\n";
+            }
+            alert("MESAS OCUPADAS: \n" + mesaOcupada);
+            var eleccion = prompt("INGRESA NUMERO DE MESA QUE DESEA MOSTRAR");
+            let mesa = [];
+            for (let i = 0; i < elementos.length; i++) {
+                if (elementos[i].mesa == eleccion) {
+                    mesa.push(elementos[i]);
+                }
+            }
+            for (let i = 0; i < mesa.length; i++) {
+                alert("Nombre: " + mesa[i].nombre + "\nFecha: " + mesa[i].fecha + "\nMesa: " + mesa[i].mesa);
+            }
+        }
+
+    });
+</script>
+
+</html>
